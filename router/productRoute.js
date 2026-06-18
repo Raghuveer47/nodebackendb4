@@ -18,7 +18,7 @@ const upload = multer({
 })
 
 router.post("/add/product",upload.single("image"),addproduct)
-
+,
 router.get("/get/products",auth,getall)
 
 router.get("/get/products/:id",getbyid)

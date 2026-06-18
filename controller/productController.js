@@ -1,15 +1,29 @@
 const Product = require("../models/Product")
+const cloudinary = require("cloudinary").v2
+
+cloudinary.config({
+    cloud_name:"dy9zlgjh6",
+    api_key:"431429911734948",
+    api_secret:"y5eNgFlDZXC_wCf80gz6llv7HTg"
+})
 
 
 
 exports.addproduct = async (req,res)=>{
 try{
 
+  const result = await cloudinary.uploader.upload(
+    req.file.path,
+    {
+        folder: "store"
+    }
+  )
+
  const product = await Product.create({
     name:req.body.name,
     price:req.body.price,
     description:req.body.description,
-    image:req.file.path
+    image:result.secure_url
  });
 
  res.status(201).json({
