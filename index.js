@@ -1,83 +1,70 @@
-const express = require('express');
-const app = express()
-const Product = require('./models/Product')
-const connectdb = require('./config/db')
-const productRoute = require("./router/productRoute")
-const authroute = require('./router/authRouter');
-const { register } = require('./controller/authController');
-//middleware
-app.use(express.json())
+const express = require("express");
 
+const app = express();
 
-connectdb()
+const PORT = 3000;
 
-app.use("/api/v1",productRoute)
-app.use("/auth",authroute)
+// Sample users data
+const users = [
+    {
+        id: 1,
+        name: "Ravi",
+        email: "ravi@gmail.com",
+        age: 22
+    },
+    {
+        id: 2,
+        name: "Priya",
+        email: "priya@gmail.com",
+        age: 21
+    },
+    {
+        id: 3,
+        name: "Arjun",
+        email: "arjun@gmail.com",
+        age: 23
+    }
+];
 
+// Home route
+app.get("/", (req, res) => {
+    res.send("Welcome to Students API");
+});
 
-app.get("/",(req,res)=>{
-   res.send("server is working ")
-})
+// About route
+app.get("/about", (req, res) => {
+    res.send("This is an Express.js application");
+});
 
+// Get all users
+app.get("/users", (req, res) => {
+    res.json(users);
+});
 
-//create data
+// Get single user
+app.get("/users/1", (req, res) => {
+    res.json(users[0]);
+});
 
+// Get products
+app.get("/products", (req, res) => {
+    const products = [
+        {
+            id: 1,
+            name: "Laptop",
+            price: 55000
+        },
+        {
+            id: 2,
+            name: "Mobile",
+            price: 25000
+        }
+    ];
 
-//get all the data
-app.get("/get/products")
+    res.json(products);
+});
 
-
-
-
-//update th data
-app.put("/update/products/:id",async (req,res)=>{
-    
-    try{
-
-        const product = await Product.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            {
-              new: true,
-            runValidators: true,
-            }
-        )
-
-        res.status(201).json({
-    message: "details of products ",
-    product
- })
-
-    }catch(err){
-res.status(500).json({
-    message: err,
-    
- })
-}
-})
-
-app.delete("/del/products/:id",async (req,res)=>{
-    
-    try{
-
-        const product = await Product.findByIdAndDelete(req.params.id)
-        res.status(201).json({
-    message: " deleted ",
-   
- })
-
-    }catch(err){
-res.status(500).json({
-    message: err,
-    
- })
-}
-})
-
-
-
-
-
-app.listen(3002,()=>{
-    console.log("server .started")
-})
+// Start server
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});
